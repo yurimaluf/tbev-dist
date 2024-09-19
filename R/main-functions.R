@@ -23,9 +23,8 @@ tbev.domain = function(theta){
 #' @param theta1 Vetor de parametros (xi,mu,sigma2) da distribuicao 1
 #' @param theta2 Vetor de parametros (xi,mu,sigma2) da distribuicao 2
 #'
-#' @return
+#' @return gives the support of distribution according to parameters
 #' @export
-#'
 tbev.interval = function(theta1, theta2) {
     domain.1 = tbev.domain(theta1)
     domain.2 = tbev.domain(theta2)
@@ -49,14 +48,9 @@ tbev.interval = function(theta1, theta2) {
         }
     } else {
         #sinais de xi iguais
-        intervalo = sort(domain.1$xi.signal * c(
-            max(
-                domain.1$x.min * domain.1$xi.signal,
-                domain.2$x.min * domain.2$xi.signal
-            ),
-            Inf
-        ))
+        intervalo = sort(domain.1$xi.signal * c(max(domain.1$x.min * domain.1$xi.signal,domain.2$x.min * domain.2$xi.signal),Inf))
     }
+    return(intervalo)
 }
 
 Cr = function(t,s,r){
@@ -75,12 +69,20 @@ failure.integrand = function(x,fbg,theta1,theta2,r){
     return(Cr(u1,u2,r)*((-log(u1))^(r-1))/u1)
 }
 
+failure.integrand.2 = function(u,theta1,theta2,r){
+    u1=evd::qgev(u,loc=theta1[2], scale=theta1[3], shape=theta1[1])
+    u2=evd::qgev(u,loc=theta1[2], scale=theta2[3], shape=theta2[1])
+    #hptbev.aux1(u1,u2,r)
+    return(Cr(u1,u2,r)*((-log(u1))^(r-1))/u1)
+}
 
-#' Compute the probability of failure given by P(X<Y). It has a special importance in reliability engineering where the random variables X and Y represent stress and strength, respectively.
+
+
+#' The function computes the probability of failure given by P(X<Y). It has a special importance in reliability engineering where the random variables X and Y represent stress and strength, respectively.
 #'
 #' @param r represents the parameter of dependence function
-#' @param theta1 Vector of parameter (xi,mu,sigma2) of the distribuicao 1 F_X where
-#' @param theta2 Vector of parameter (xi,mu,sigma2) of the distribuicao 2 F_Y
+#' @param theta1 Vector of parameter (xi,mu,sigma) of the distribuicao 1 F_X
+#' @param theta2 Vector of parameter (xi,mu,sigma) of the distribuicao 2 F_Y
 #'
 #' @return The value of the probability failure
 #' @export
@@ -93,22 +95,17 @@ failure.tbev = function(r,theta1,theta2){
     return(result$value)
 }
 
-#' The function computes the probability of failure given by P(X<Y), where X~F and Y~F are random variables with a GEV distribution. It has a special importance in reliability engineering where X and Y represent stress and strength, respectively.
+#' The function computes the probability of failure given by P(X<Y), where X~F and Y~F are random variables with a GEV distribution with parameter location mu, scale sigma and shape xi. It has a special importance in reliability engineering where X and Y represent stress and strength, respectively.
+#'
 #' @param r represents the parameter of dependence function.
-#' @param theta1
-#' @param theta2
+#' @param theta1 Vector of parameter (xi,mu,sigma) of the distribuicao 1 F_X
+#' @param theta2 Vector of parameter (xi,mu,sigma) of the distribuicao 2 F_Y
 #'
-#' @return
+#' @return The value of the probability failure
 #' @export
-#'
-#' @examples
 failure.tbev.2 = function(r,theta1,theta2){
-
-
-    # Def. do Intervalo
-    intervalo = tbev.interval(theta1, theta2)
     # Calculo da Integral
-    result=integrate(failure.integrand,lower=intervalo[1],upper=intervalo[2],r=r,theta1=theta1,theta2=theta2)
+    result=integrate(failure.integrand.2,lower=0,upper=1,r=r,theta1=theta1,theta2=theta2)
     return(result$value)
 }
 

@@ -1,11 +1,14 @@
 Package: tbevdist
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Numerical Methods Complement of the Transformed Bivariate GEV R package
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Author: Maluf, Y. S.
+Maintainer:  <yurimaluf@gmail.com>
+Description: This short package aims to support the tbev-dist R' packages with some numerical methods.  
+Depends: R (>= 4.0.0), R6, evd 
+Imports: rstudioapi, numDeriv, miscTools 
+License: GPL-3
+NeedsCompilation: no
 Encoding: UTF-8
 LazyData: true
+

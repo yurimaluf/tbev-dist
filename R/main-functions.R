@@ -18,7 +18,7 @@ tbev.domain = function(theta){
 
 
 
-#' Title Verifica o intervalo do suporte da distribuição GEV para cada componente
+#' Verifica o intervalo do suporte da distribuição GEV para cada componente
 #'
 #' @param theta1 Vetor de parametros (xi,mu,sigma2) da distribuicao 1
 #' @param theta2 Vetor de parametros (xi,mu,sigma2) da distribuicao 2
@@ -26,7 +26,6 @@ tbev.domain = function(theta){
 #' @return
 #' @export
 #'
-#' @examples
 tbev.interval = function(theta1, theta2) {
     domain.1 = tbev.domain(theta1)
     domain.2 = tbev.domain(theta2)
@@ -61,14 +60,15 @@ tbev.interval = function(theta1, theta2) {
 }
 
 Cr = function(t,s,r){
-    return((-log(t))^r+(-log(s))^r)
+    return(((-log(t))^r+(-log(s))^r)^(1/r))
 }
 
 hptbev.aux1 = function(u1,u2,r){
    return(Cr(u1,u2,r)*((-log(u1))^(r-1))/u1)
 }
 
-hptbev.aux2 = function(x,fbg,theta1,theta2,r){
+
+failure.integrand = function(x,fbg,theta1,theta2,r){
     u1=fbg(x,theta1)
     u2=fbg(x,theta2)
     #hptbev.aux1(u1,u2,r)
@@ -78,7 +78,23 @@ hptbev.aux2 = function(x,fbg,theta1,theta2,r){
 
 #' Compute the probability of failure given by P(X<Y). It has a special importance in reliability engineering where the random variables X and Y represent stress and strength, respectively.
 #'
-#' @param r
+#' @param r represents the parameter of dependence function
+#' @param theta1 Vector of parameter (xi,mu,sigma2) of the distribuicao 1 F_X where
+#' @param theta2 Vector of parameter (xi,mu,sigma2) of the distribuicao 2 F_Y
+#'
+#' @return The value of the probability failure
+#' @export
+#'
+failure.tbev = function(r,theta1,theta2){
+    # Def. do Intervalo
+    intervalo = tbev.interval(theta1, theta2)
+    # Calculo da Integral
+    result=integrate(failure.integrand,lower=intervalo[1],upper=intervalo[2],r=r,theta1=theta1,theta2=theta2)
+    return(result$value)
+}
+
+#' The function computes the probability of failure given by P(X<Y), where X~F and Y~F are random variables with a GEV distribution. It has a special importance in reliability engineering where X and Y represent stress and strength, respectively.
+#' @param r represents the parameter of dependence function.
 #' @param theta1
 #' @param theta2
 #'
@@ -86,20 +102,14 @@ hptbev.aux2 = function(x,fbg,theta1,theta2,r){
 #' @export
 #'
 #' @examples
-h.failure.tbev = function(r,theta1,theta2){
-    #
-    xi1=theta1[1]
-    mu1=theta1[2]
-    sigma1=theta1[3]
-    #
-    xi2=theta2[1]
-    mu2=theta2[2]
-    sigma2=theta2[3]
-    #
+failure.tbev.2 = function(r,theta1,theta2){
 
-    #
-    integrate(hptbev.aux2,r,theta1,theta2)
 
+    # Def. do Intervalo
+    intervalo = tbev.interval(theta1, theta2)
+    # Calculo da Integral
+    result=integrate(failure.integrand,lower=intervalo[1],upper=intervalo[2],r=r,theta1=theta1,theta2=theta2)
+    return(result$value)
 }
 
 

@@ -4,8 +4,8 @@ Title: Numerical Methods Complement of the Transformed Bivariate GEV R package
 Version: 0.1.0
 Author: Maluf, Y. S.
 Maintainer: <yurimaluf@gmail.com>
-Description: This short package aims to support the tbev-dist R' packages with some numerical methods.  
-Depends: R (>= 4.0.0), R6, evd, bgev 
+Description: This short package aims to support the tbev-dist R packages with some numerical methods
+Depends: R (>= 4.0.0), R6, evd, bgev, copula 
 Imports: rstudioapi, numDeriv, miscTools 
 License: GPL-3
 NeedsCompilation: no

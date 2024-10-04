@@ -2,20 +2,22 @@
 % Please edit documentation in R/main-functions.R
 \name{failure.tbev}
 \alias{failure.tbev}
-\title{The function computes the probability of failure given by P(X<Y). It has a special importance in reliability engineering where the random variables X and Y represent stress and strength, respectively.}
+\title{The function computes the probability of failure given by P(X<Y), where X~F and Y~F are random variables with GEV distribution. It has a special importance in reliability engineering where X and Y represent stress and strength, respectively. The vector parameter (xi,mu,sigma) is given by location mu, scale sigma and shape xi parameter.}
 \usage{
-failure.tbev(r, theta1, theta2)
+failure.tbev(copula.object)
 }
 \arguments{
-\item{r}{represents the parameter of dependence function}
+\item{theta1}{Vector of parameter (xi,mu,sigma,delta) of the distribuicao 1 F_X}
 
-\item{theta1}{Vector of parameter (xi,mu,sigma) of the distribuicao 1 F_X}
+\item{theta2}{Vector of parameter (xi,mu,sigma,delta) of the distribuicao 2 F_Y}
 
-\item{theta2}{Vector of parameter (xi,mu,sigma) of the distribuicao 2 F_Y}
+\item{copula.type}{An extreme-value copula class within gumbel, galambos, huslerReiss, tawn, and tev}
+
+\item{rho}{The value of Spearman's dependence index}
 }
 \value{
-The value of the probability failure
+The value of probability failure
 }
 \description{
-The function computes the probability of failure given by P(X<Y). It has a special importance in reliability engineering where the random variables X and Y represent stress and strength, respectively.
+The function computes the probability of failure given by P(X<Y), where X~F and Y~F are random variables with GEV distribution. It has a special importance in reliability engineering where X and Y represent stress and strength, respectively. The vector parameter (xi,mu,sigma) is given by location mu, scale sigma and shape xi parameter.
 }

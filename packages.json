@@ -1,0 +1,11 @@
+[
+  {
+    "package": "pdftools",
+    "url": "https://github.com/ropensci/pdftools"
+  },
+  {
+    "package": "tbev-dist",
+    "url": "https://github.com/yurimaluf/tbev-dist"
+  }
+]
+

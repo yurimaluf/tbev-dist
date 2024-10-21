@@ -1,4 +1,7 @@
 library(R6)
+library(cli)
+library(copula)
+library(bgev)
 # Hello, world!
 #
 # This is an example function named 'hello'
@@ -30,20 +33,18 @@ transf.BEV = function(x,mu,delta){
 }
 
 
-#' The function computes the probability of failure given by P(X<Y), where X~F and Y~F are random variables with GEV distribution. It has a special importance in reliability engineering where X and Y represent stress and strength, respectively. The vector parameter (xi,mu,sigma) is given by location mu, scale sigma and shape xi parameter.
+#'  Computa a probabilidade de falha P(X<Y), onde X e Y são variáveis aleatórias X~F e Y~F com distribuição GEV.
 #'
-#' @param theta1 Vector of parameter (xi,mu,sigma,delta) of the distribuicao 1 F_X
-#' @param theta2 Vector of parameter (xi,mu,sigma,delta) of the distribuicao 2 F_Y
-#' @param copula.type An extreme-value copula class within gumbel, galambos, huslerReiss, tawn, and tev
-#' @param rho The value of Spearman's dependence index
+#' @param copulagev Objeto da classe copulagev
 #'
-#' @return The value of probability failure
+#' @return Valor da probabilidade de falha
 #' @export
-failure.tbev = function(copula.object){
-    # Integrating data
-    param = copula.object$assembly()
-
-    # Figureing out integral
+failure.tbev = function(copulagev.object=){
+    if(class(copulagev.object)[1]=="copulagev"){
+        # Obtendo os parâmetros das marginais
+        param = copulagev.object$assembly()
+    }
+    # Computando o valor da integral
     result=integrate(DC.integrand,lower=0.001,upper=0.999,param)
     return(result$value)
 }
@@ -82,9 +83,28 @@ ev.class.copula = function(type,rho,df=3){
 }
 
 #' @export
-mount.theta = function(xi,mu,sigma,delta){
-    return(list(xi=xi,mu=mu,sigma=sigma,delta=delta))
+mount.theta = function(mu,sigma,xi,delta){
+    return(list(mu=mu,sigma=sigma,xi=xi,delta=delta))
 }
+
+#' A função transforma o parâmetro da cópula no coeficiente de correlação de Spearman.
+#'
+#' @param r Parâmetro natural da copula
+#' @param copula.type Copula de valor extremo entre as classes gumbel, galambos, huslerReiss, tawn, and tev
+#'
+#' @return Coeficiente de correlação de Spearman
+#' @export
+translate_r2rho =function(r,type.cop){
+    ev.Copula = switch(
+        type.cop,
+        "gumbel"= copula::rho(copula::gumbelCopula(r)),
+        "galambos"= copula::rho(copula::galambosCopula(r)),
+        "huslerReiss"= copula::rho(copula::huslerReissCopula(r)),
+        "tawn"= copula::rho(copula::tawnCopula(r)),
+        "tev"= copula::rho(copula::tevCopula(r))
+    )
+}
+
 
 
 

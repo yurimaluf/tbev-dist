@@ -1,14 +1,14 @@
 library("R6")
-#' Classe Copulas GEV
-#' @title Classe Copulas GEV
+#' Classe copulagev
+#' @title Classe da Copulas GEV
 #' @docType class
 #' @importFrom R6 R6Class
 #' @export
-#' @description The class provides tools to define the type and dependency parameter attributes of a copula, and the associated methods such as its value, conditional probability and failure probability
+#' @description A classe representa as copulas e fornece um ferramental para copula
 #' @field copula.type An extreme-value copula class within gumbel, galambos, huslerReiss, tawn,
 #' @field rho The value of Spearman's dependence index
-#' @field theta.u1 Parameter Vector
-#' @field theta.u2 Parameter Vector
+#' @field theta.u1 Vetor de parâmetro da marginal 1
+#' @field theta.u2 Vetor de parâmetro da marginal 2
 #' @field name Name for test
 #' @section Methods:
 #' \describe{
@@ -18,23 +18,23 @@ library("R6")
 #'  \item{\code{get.class.cop()}}{This method is used to create object of this class with  Spearmon's dependency index value.}}
 copulagev <- R6Class("copulagev",
                     public = list(
-                        #' @description
-                        #' Create an object of copulagev class
-                        #' @param cop.type Name of the copula
-                        #' @param Spearman.rho Coeficient of Spearman correlation
+                        #' @description Construtor da classe copulagev
+                        #' @param cop.type Nome da copula
+                        #' @param Spearman.rho Coeficiente de correlação de Spearman
                         initialize = function(cop.type=NULL, Spearman.rho=NULL){
-                            # cat(paste0("Hello, my name is ", self$name, ".\n"))
                             self$set.class.cop(cop.type,Spearman.rho)
                         },
-                        name = "Yuri",
                         rho = NULL,
                         copula.type = NULL,
-                        theta.u1 = list(xi=NULL,mu=NULL,sigma=NULL,delta=NULL),
-                        theta.u2 = list(xi=NULL,mu=NULL,sigma=NULL,delta=NULL),
-                        #' @description
-                        #' Set the main features of a copula
-                        #' @param cop.type Name of the copula
-                        #' @param Spearman.rho Coeficient of Spearman correlation
+                        theta.u1 = list(mu=NULL,sigma=NULL,xi=NULL,delta=NULL),
+                        theta.u2 = list(mu=NULL,sigma=NULL,xi=NULL,delta=NULL),
+                        #' @description Retorna o nome da classe
+                        name = function(){
+                            return(private$class.name)
+                        },
+                        #' @description Define o tipo de copula extrema
+                        #' @param cop.type Nome da copula
+                        #' @param Spearman.rho Coeficiente de correlação de Spearman
                         set.class.cop = function(copula.name,rho.coef){
                             if(!is.null(copula.name) && !is.null(rho.coef)){
                                 df=3
@@ -50,8 +50,7 @@ copulagev <- R6Class("copulagev",
                                 private$class.copula = ev.Copula
                             }
                         },
-                        #' @description
-                        #' Get the main features of a copula
+                        #' @description Get the main features of a copula
                         get.class.cop = function(){
                             if(is.null(private$class.copula)){
                                 self$set.class.cop()
@@ -65,7 +64,10 @@ copulagev <- R6Class("copulagev",
                             return(param)
                         }
                     ),
-                    private = list(class.copula = NULL)
+                    private = list(
+                        class.copula = NULL,
+                        class.name = "copulagev"
+                        )
                     )
 
 
